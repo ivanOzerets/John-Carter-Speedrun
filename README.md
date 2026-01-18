@@ -18,6 +18,6 @@ Please reference the following directories.
 
 [2] Projects (what people actually care about)
 
-[3] MISC (linux, keyboard, zettelkasten, re-zero)
+[3] MISC (linux, ferris sweep, zettelkasten, re-zero)
 
 No LLMs were harmed in the making of this README.
