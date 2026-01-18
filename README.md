@@ -1,4 +1,4 @@
-My mother always told me the direct translation of my russian name would have been John. Fortuitous indeed.
+My mother always told me the direct translation of my russian name would have been John. How fortuitous indeed.
 
 To me, AI doesn't appear as a net good for society. Impacts on the job market, power comsumption, youth attention span, and the eventual live action Terminator remake. However, I would like to better understand AI for these enevitable futures we're all sprinting towards. Because who knows, there may come a time I have to change my last name to Carter.
 
