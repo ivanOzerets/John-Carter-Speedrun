@@ -14,10 +14,15 @@ Hopefully, this repo will become a sort of roadmap for anyone looking to follow 
 
 Please reference the following directories.
 
-[1] Knowledge (on my seven new bookshelves)
+[Knowledge] (on my seven new bookshelves)
 
-[2] Projects (what people actually care about)
+[Projects] (what people actually care about)
 
-[3] MISC (linux, ferris sweep, zettelkasten, re-zero)
+[MISC] (linux, ferris sweep, zettelkasten, re-zero)
 
 No LLMs were harmed in the making of this README.
+
+Meta Nota
+- learn Markdown better
+- modify with local repo then push
+- looking to add meta notes to every README
