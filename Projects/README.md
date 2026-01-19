@@ -1,5 +1,5 @@
-[ 1 ]  Tennis
+[Tennis](https://github.com/ivanOzerets/John-Carter-Speedrun/tree/main/Projects/Ferris-Sweep)
 
-[ 2 ]  AI music recognition
+[AI-Music-Recognition](https://github.com/ivanOzerets/John-Carter-Speedrun/tree/main/Projects/AI-Music-Recognition)
 
-[ 3 ]  Paper Recreations
+[Paper Recreations](https://github.com/ivanOzerets/John-Carter-Speedrun/tree/main/Projects/Paper-Recreations)
