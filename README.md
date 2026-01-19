@@ -12,13 +12,11 @@ This subject comes easy to me, at least in contrast with any other cerebral ende
 
 Hopefully, this repo will become a sort of roadmap for anyone looking to follow in my footsets. Those footsteps being transitioning from interests in programming, specifically machine learning and aritificial intelligence, into becoming a competant and knowledgable figure in the field.
 
-Please reference the following directories.
+[Knowledge](https://github.com/ivanOzerets/John-Carter-Speedrun/tree/main/Knowledge) (on my seven new bookshelves)
 
-[Knowledge] (on my seven new bookshelves)
+[Projects](https://github.com/ivanOzerets/John-Carter-Speedrun/tree/main/Projects) (what people actually care about)
 
-[Projects] (what people actually care about)
-
-[MISC] (linux, ferris sweep, zettelkasten, re-zero)
+[MISC](https://github.com/ivanOzerets/John-Carter-Speedrun/tree/main/MISC) (linux, ferris sweep, zettelkasten, re-zero)
 
 No LLMs were harmed in the making of this README.
 
