@@ -1,9 +1,9 @@
-[ 1 ] Ferris Sweep
+[Ferris Sweep](https://github.com/ivanOzerets/John-Carter-Speedrun/tree/main/MISC/Ferris-Sweep)
 
-[ 2 ] Linux
+[Linux](https://github.com/ivanOzerets/John-Carter-Speedrun/tree/main/MISC/Linux)
 
-[ 3 ] Zettelkasten
+[Zettelkasten](https://github.com/ivanOzerets/John-Carter-Speedrun/tree/main/MISC/Zettelkasten)
 
-[ 4 ] Re-Zero Task Managment System
+[Re-Zero TMS](https://github.com/ivanOzerets/John-Carter-Speedrun/tree/main/MISC/Re-Zero-TMS)
 
-[ 5 ] Stynography
+[Stynography](https://github.com/ivanOzerets/John-Carter-Speedrun/tree/main/MISC/Stynography)
