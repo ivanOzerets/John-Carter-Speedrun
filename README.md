@@ -20,7 +20,7 @@ Hopefully, this repo will become a sort of roadmap for anyone looking to follow 
 
 No LLMs were harmed in the making of this README.
 
-Meta Nota
+Meta Notes
 - learn Markdown better
 - modify with local repo then push
 - looking to add meta notes to every README
