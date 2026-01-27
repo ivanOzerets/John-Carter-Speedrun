@@ -1,6 +1,7 @@
 List of books I have read.
 
 List of books I am reading.
+- Mathematics for Machine Learning
 
 List of books I will read.
 - Probabilistic Machine Learning: Advanced Topics
@@ -13,7 +14,6 @@ List of books I will read.
 - Pattern Recognition and Machine Learning
 - Machine Learning For Absolute Beginners: Third Edition
 - Natural Language Processing with Transformers
-- Mathematics for Machine Learning
 - LLM Engineer's Handbook
 - Hands-On Machine Learning with Scikit-Learn and PyTorch
 - Machine Learning with PyTorch and scikit-Learn
