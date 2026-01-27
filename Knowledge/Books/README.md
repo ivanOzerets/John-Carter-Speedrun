@@ -1,3 +1,8 @@
+My notes on books will go as follows.
+
+Standard notetaking as I read through the book.
+Followed by summaries in my own words after every subschapter and chapter.
+
 List of books I have read.
 
 List of books I am reading.
