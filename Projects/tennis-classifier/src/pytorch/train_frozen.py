@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 import wandb
 import os
-from src.pytorch.model import SimpleCNN
+from src.pytorch.model import get_resnet50
 from src.pytorch.data import get_dataloaders
 from src.pytorch.trainer import train, evaluate
 
@@ -14,22 +14,20 @@ PROCESSED_DIR = os.path.join("data", "processed")
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 CLASS_NAMES = ["forehand", "backhand", "serve", "volley", "overhead"]
 NUM_CLASSES = len(CLASS_NAMES)
-DROPOUT_RATE = 0.5
-NORMALIZE_MEAN = [0.5, 0.5, 0.5]
-NORMALIZE_STD = [0.5, 0.5, 0.5]
-SAVE_PATH = os.path.join("models", "best_scratch_cnn.pt")
+NORMALIZE_MEAN = [0.485, 0.456, 0.406]
+NORMALIZE_STD = [0.229, 0.224, 0.225]
+SAVE_PATH = os.path.join("models", "best_frozen_resnet50.pt")
 
 if __name__ == "__main__":
-    wandb.init(project="tennis-classifier", name="train_scratch_cnn_v2", entity="ivan.ozerets", config={
+    wandb.init(project="tennis-classifier", name="train_frozen_resnet50", entity="ivan.ozerets", config={
         "epochs": EPOCHS,
         "batch_size": BATCH_SIZE,
         "learning_rate": LEARNING_RATE,
-        "dropout": DROPOUT_RATE,
         "optimizer": "Adam",
-        "model": "SimpleCNN"
+        "model": "ResNet50 Frozen"
     })
 
-    model = SimpleCNN(num_classes=NUM_CLASSES, dropout_rate=DROPOUT_RATE).to(DEVICE)
+    model = get_resnet50(num_classes=NUM_CLASSES, freeze=True).to(DEVICE)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
     train_loader, val_loader, test_loader = get_dataloaders(PROCESSED_DIR, BATCH_SIZE, NORMALIZE_MEAN, NORMALIZE_STD)
