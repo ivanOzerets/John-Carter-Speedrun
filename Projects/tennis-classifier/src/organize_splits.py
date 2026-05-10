@@ -3,12 +3,12 @@ import os
 from tqdm import tqdm
 from sklearn.model_selection import train_test_split
 
-RAW_IMAGES_DIR = os.path.join("data", "raw", "images")
-PROCESSED_DIR = os.path.join("data", "processed")
+RAW_IMAGES_DIR = os.path.join("data", "raw")
+PROCESSED_DIR = os.path.join("data", "split")
 TRAIN_RATIO = 0.80
 VAL_RATIO = 0.20
 IMAGE_SIZE = (224, 224)
-CLASS_NAMES = ["forehand", "backhand", "serve", "volley", "overhead"]
+CLASS_NAMES = ["buildings", "forest", "glacier", "mountain", "sea", "street"]
 
 def load_paths():
     """
@@ -58,7 +58,7 @@ if __name__ == "__main__":
     print("Loading image paths and labels...")
     paths, labels = load_paths()
 
-    print("Splitting data into train/val/test...")
+    print("Splitting data into train and val sets...")
     (X_train, y_train), (X_val, y_val) = split_data(paths, labels)
 
     print("Saving training set...")

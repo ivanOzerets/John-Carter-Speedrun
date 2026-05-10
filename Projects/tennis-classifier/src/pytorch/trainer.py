@@ -1,9 +1,8 @@
 import torch
 import wandb
-import os
 from tqdm import tqdm
 
-def train(model, train_loader, val_loader, criterion, optimizer, epochs, device, save_path):
+def train(model, train_loader, val_loader, criterion, optimizer, epochs, device, save_path, epoch_offset=0, total_epochs=10):
     """
     Train the model and evaluate on the validation set after each epoch.
     """
@@ -14,7 +13,7 @@ def train(model, train_loader, val_loader, criterion, optimizer, epochs, device,
         train_correct, train_total = 0, 0
         
         model.train()
-        for inputs, labels, in tqdm(train_loader, desc=f"Epoch {epoch+1}/{epochs}"):
+        for inputs, labels, in tqdm(train_loader, desc=f"Epoch {epoch+1+epoch_offset}/{total_epochs}"):
             inputs, labels = inputs.to(device), labels.to(device)
             optimizer.zero_grad()
             outputs = model(inputs)
@@ -32,7 +31,7 @@ def train(model, train_loader, val_loader, criterion, optimizer, epochs, device,
 
         val_loss, val_acc = evaluate(model, val_loader, criterion, device)
 
-        print(f"Epoch {epoch+1}/{epochs}")
+        print(f"Epoch {epoch+1+epoch_offset}/{total_epochs}")
         print(f"Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.4f}")
         print(f"Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.4f}")
 
@@ -41,7 +40,7 @@ def train(model, train_loader, val_loader, criterion, optimizer, epochs, device,
             "train/acc": train_acc,
             "val/loss": val_loss,
             "val/acc": val_acc,
-            "epoch": epoch + 1
+            "epoch": epoch + 1 + epoch_offset
         })
 
         if val_loss < best_val_loss:

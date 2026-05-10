@@ -26,7 +26,7 @@ class SimpleCNN(nn.Module):
         return x
 
 def get_resnet50(num_classes, freeze=True):
-    model = models.resnet50(pretrained=True)
+    model = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V2)
 
     if freeze:
         for param in model.parameters():
@@ -34,3 +34,8 @@ def get_resnet50(num_classes, freeze=True):
 
     model.fc = nn.Linear(model.fc.in_features, num_classes)
     return model
+
+def unfreeze_layers(model, layer_names):
+    for name, param in model.named_parameters():
+        if any(layer_name in name for layer_name in layer_names):
+            param.requires_grad = True

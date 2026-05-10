@@ -10,9 +10,9 @@ from src.pytorch.trainer import train, evaluate
 EPOCHS = 10
 BATCH_SIZE = 32
 LEARNING_RATE = 0.001
-PROCESSED_DIR = os.path.join("data", "processed")
+PROCESSED_DIR = os.path.join("data", "split")
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-CLASS_NAMES = ["forehand", "backhand", "serve", "volley", "overhead"]
+CLASS_NAMES = ["buildings", "forest", "glacier", "mountain", "sea", "street"]
 NUM_CLASSES = len(CLASS_NAMES)
 DROPOUT_RATE = 0.5
 NORMALIZE_MEAN = [0.5, 0.5, 0.5]
@@ -20,7 +20,7 @@ NORMALIZE_STD = [0.5, 0.5, 0.5]
 SAVE_PATH = os.path.join("models", "best_scratch_cnn.pt")
 
 if __name__ == "__main__":
-    wandb.init(project="tennis-classifier", name="train_scratch_cnn_v2", entity="ivan.ozerets", config={
+    wandb.init(project="nature_scenes", name="train_scratch_cnn_v2", entity="ivan.ozerets", config={
         "epochs": EPOCHS,
         "batch_size": BATCH_SIZE,
         "learning_rate": LEARNING_RATE,
