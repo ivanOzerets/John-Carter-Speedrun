@@ -3,7 +3,7 @@ import torchvision.transforms as transforms
 from PIL import Image
 import sys
 import os
-from src.pytorch.model import SimpleCNN, get_resnet50
+from src.pytorch.model import SimpleCNN, get_pretrained_model
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 CLASS_NAMES = ["forehand", "backhand", "serve", "volley", "overhead"]
@@ -41,7 +41,7 @@ def predict(image_path, model_type="scratch"):
     if model_type == "scratch":
         model = SimpleCNN(num_classes=len(CLASS_NAMES)).to(DEVICE)
     else:
-        model = get_resnet50(num_classes=len(CLASS_NAMES)).to(DEVICE)
+        model = get_pretrained_model(num_classes=len(CLASS_NAMES)).to(DEVICE)
 
     model.load_state_dict(torch.load(MODEL_PATHS[model_type], map_location=DEVICE))
     model.eval()

@@ -4,6 +4,8 @@ __pycache__/
 .env
 data/raw/
 data/split/
+data/split_small/
+data/split_medium/
 models/
 *.pt
 *.pth
