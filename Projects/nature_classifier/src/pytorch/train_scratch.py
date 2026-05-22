@@ -46,7 +46,7 @@ def sweep_train():
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.AdamW(model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay)
 
-    train(model, train_loader, val_loader, criterion, optimizer, EPOCHS, DEVICE, save_path)
+    _ = train(model, train_loader, val_loader, criterion, optimizer, EPOCHS, DEVICE, save_path)
 
     test_loss, test_acc = evaluate(model, test_loader, criterion, DEVICE)
     wandb.log({"test/loss": test_loss, "test/acc": test_acc})

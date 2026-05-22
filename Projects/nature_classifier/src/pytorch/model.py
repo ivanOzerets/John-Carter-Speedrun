@@ -16,6 +16,9 @@ def get_gradual_layers(model_name):
         "efficientnet_b3": [["features.8"], ["features.7"], ["features.6"]]
     }
 
+    if model_name not in layer_map:
+        raise ValueError(f"Unknown model: {model_name}. Available models: {list(layer_map.keys())}")
+
     return layer_map[model_name]
 
 class SimpleCNN(nn.Module):
@@ -49,7 +52,8 @@ class SimpleCNN(nn.Module):
             x = self.pool(x)
 
         x = torch.flatten(x, 1)
-        x = torch.relu(self.fc1(x))
+        x = self.fc1(x)
+        x = torch.relu(x)
         x = self.dropout(x)
         x = self.fc2(x)
 
