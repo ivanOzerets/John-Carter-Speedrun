@@ -32,7 +32,7 @@ def train_strategy(model, config, train_loader, val_loader, criterion, device, s
         optimizer_and_train(model, config, train_loader, val_loader, criterion, device, save_path, config.learning_rate)
     elif config.strategy == "gradual":
         layer_groups = get_gradual_layers(config.model_name)
-        completed_epochs = optimizer_and_train(model, config, train_loader, val_loader, criterion, device, save_path, config.learning_rate)
+        completed_epochs = 0
 
         for i, phase_layers in enumerate(layer_groups):
             unfreeze_layers(model, phase_layers)

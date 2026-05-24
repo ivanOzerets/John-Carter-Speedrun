@@ -25,8 +25,8 @@ sweep_config = {
     },
     "parameters": {
         "model_name": {"values": ["resnet50"]},
-        "data_size": {"values": ["small", "medium", "full"]},
-        "strategy": {"values": ["gradual", "finetune"]},
+        "data_size": {"values": ["full"]},
+        "strategy": {"values": ["gradual"]},
         "learning_rate": {"value": LEARNING_RATE},
         "dropout": {"value": DROPOUT_RATE},
         "batch_size": {"value": BATCH_SIZE},
@@ -87,12 +87,11 @@ def sweep_train():
     if config.strategy == "frozen":
         _ = compile_and_fit(model, train_dataset, val_dataset, config, save_path, config.learning_rate)
     elif config.strategy == "gradual":
-        epochs_completed = compile_and_fit(model, train_dataset, val_dataset, config, save_path, config.learning_rate)
         layer_groups = get_gradual_layers(config.model_name)
 
         for i, group in enumerate(layer_groups):
             unfreeze_model(model, group, backbone_name=config.model_name)
-            lr = config.learning_rate / (10 ** (i + 1))
+            lr = config.learning_rate / (10 ** i)
             epochs_completed = compile_and_fit(model, train_dataset, val_dataset, config, save_path, lr, initial_epoch=epochs_completed)
     elif config.strategy == "finetune":
         model.get_layer(config.model_name).trainable = True
@@ -104,4 +103,4 @@ def sweep_train():
 
 if __name__ == "__main__":
     sweep_id = wandb.sweep(sweep_config, project="nature-classifier", entity="ivan.ozerets")
-    wandb.agent(sweep_id, function=sweep_train, count=6)
+    wandb.agent(sweep_id, function=sweep_train, count=3)

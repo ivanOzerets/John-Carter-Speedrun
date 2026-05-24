@@ -25,8 +25,8 @@ sweep_config = {
         "goal": "maximize"
     },
     "parameters": {
-        "model_name": {"values": ["resnet50"]},
-        "data_size": {"values": ["medium","full"]},
+        "model_name": {"values": ["resnet101"]},
+        "data_size": {"values": ["small","medium","full"]},
         "strategy": {"values": ["gradual"]},
         "learning_rate": {"value": LEARNING_RATE},
         "dropout": {"value": DROPOUT_RATE},
