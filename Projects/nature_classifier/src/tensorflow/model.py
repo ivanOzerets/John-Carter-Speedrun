@@ -1,41 +1,40 @@
 import tensorflow as tf
 from tensorflow import keras
-from tensorflow.keras import layers, Model
+from tensorflow.keras import Model, layers
 
-class SimpleCNN(Model):
-    def __init__(self, num_conv_layers=3, base_filters=32, num_classes=6, dropout_rate=0.3, input_shape=(224, 224, 3)):
-        super().__init__()
-        
-        self.conv_layers = []
-        self.bn_layers = []
-        out_channels = base_filters
+def get_gradual_layers(model_name):
+    '''
+    Returns layer groups for gradual unfreezing based on the model architecture.
+    '''
+    if model_name == "resnet50":
+        return [["conv5"], ["conv4"], ["conv3"]]
+    else:
+        raise ValueError(f"Unsupported model name: {model_name}")
 
-        for _ in range(num_conv_layers):
-            self.conv_layers.append(layers.Conv2D(out_channels, kernel_size=3, padding='same'))
-            self.bn_layers.append(layers.BatchNormalization())
-            out_channels *= 2
+def SimpleCNN(num_conv_layers=3, base_filters=32, num_classes=6, dropout_rate=0.5):
+    '''
+    Returns a simple CNN model with the specified input shape, number of classes, and dropout rate
+    '''
+    model_layers = []
+    out_channels = base_filters
+    
+    for _ in range(num_conv_layers):
+        model_layers.extend([
+            layers.Conv2D(out_channels, (3, 3), padding='same'),
+            layers.BatchNormalization(),
+            layers.ReLU(),
+            layers.MaxPooling2D(pool_size=(2, 2))
+        ])
+        out_channels *= 2
 
-        self.flatten = layers.Flatten()
-        self.fc1 = layers.Dense(512)
-        self.fc2 = layers.Dense(num_classes)
+    model_layers.extend([
+        layers.Flatten(),
+        layers.Dense(512, activation='relu'),
+        layers.Dropout(dropout_rate),
+        layers.Dense(num_classes)
+    ])    
 
-        self.pool = layers.MaxPooling2D(pool_size=(2, 2))
-        self.dropout = layers.Dropout(dropout_rate)
-
-    def call(self, x, training=False):
-        for conv, bn in zip(self.conv_layers, self.bn_layers):
-            x = conv(x)
-            x = bn(x, training=training)
-            x = tf.nn.relu(x)
-            x = self.pool(x)
-
-        x = self.flatten(x)
-        x = self.fc1(x)
-        x = tf.nn.relu(x)
-        x = self.dropout(x, training=training)
-        x = self.fc2(x)
-
-        return x
+    return keras.Sequential(model_layers, name='SimpleCNN')
 
 def get_pretrain_model(num_classes, dropout_rate=0.5, freeze=True):
     '''
@@ -54,13 +53,11 @@ def get_pretrain_model(num_classes, dropout_rate=0.5, freeze=True):
 
     return model
 
-def unfreeze_model(model, num_unfreeze):
+def unfreeze_model(model, layer_names, backbone_name="resnet50"):
     '''
-    Unfreezes the last `num_layers_to_unfreeze` layers of the model for fine-tuning.
+    Unfreezes the specified layers of the model for fine-tuning.
     '''
-    if num_unfreeze <= 0:
-        print("No layers to unfreeze.")
-        return
-
-    for layer in model.layers[-num_unfreeze:]:
-        layer.trainable = True
+    backbone = model.get_layer(backbone_name)
+    for layer in backbone.layers:
+        if any(name in layer.name for name in layer_names):
+            layer.trainable = True

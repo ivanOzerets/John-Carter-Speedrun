@@ -4,48 +4,48 @@ import wandb
 from tqdm import tqdm
 from src.pytorch.model import unfreeze_layers, get_gradual_layers
 
+def optimizer_and_train(model, config, train_loader, val_loader, criterion, device, save_path, lr, epoch_offset=0):
+    """
+    Set up the optimizer and train the model according to the specified strategy.
+    """
+    optimizer = optim.AdamW(
+        filter(lambda p: p.requires_grad, model.parameters()), 
+        lr=lr, weight_decay=config.weight_decay
+    )
+
+    return train(model, train_loader, val_loader, criterion, optimizer,
+        config.epochs, device, save_path, epoch_offset=epoch_offset, patience=config.patience
+    )
+
 def train_strategy(model, config, train_loader, val_loader, criterion, device, save_path):
     '''
     Train the model according to the specified strategy.
+
+    Strategies:
+    - frozen: train classification head only, backbone frozen
+    - gradual: staged fine-tuning - train head first, then gradually unfreeze
+               the first few layers until convergence at each stage, reducing
+               the learning rate at each stage.
+    - finetune: unfreeze all backbone layers with reduced learning rate
     '''
     if config.strategy == "frozen":
-        optimizer = optim.AdamW(
-            filter(lambda p: p.requires_grad, model.parameters()), 
-            lr=config.learning_rate, weight_decay=config.weight_decay
-            )
-        _ = train(model, train_loader, val_loader, criterion, optimizer,
-            config.epochs, device, save_path, patience=config.patience
-        )
+        optimizer_and_train(model, config, train_loader, val_loader, criterion, device, save_path, config.learning_rate)
     elif config.strategy == "gradual":
         layer_groups = get_gradual_layers(config.model_name)
-        completed_epochs = 0
+        completed_epochs = optimizer_and_train(model, config, train_loader, val_loader, criterion, device, save_path, config.learning_rate)
 
         for i, phase_layers in enumerate(layer_groups):
             unfreeze_layers(model, phase_layers)
             lr = config.learning_rate / (10 ** i)
             
-            optimizer = optim.AdamW(
-                filter(lambda p: p.requires_grad, model.parameters()), 
-                lr=lr, weight_decay=config.weight_decay
-            )
-            epochs_run = train(model, train_loader, val_loader, criterion, optimizer,
-                  config.epochs, device, save_path, 
-                  epoch_offset=completed_epochs, 
-                  patience=config.patience
-            )
+            epochs_run = optimizer_and_train(model, config, train_loader, val_loader, criterion, device, save_path, lr, epoch_offset=completed_epochs)
 
             completed_epochs += epochs_run
     elif config.strategy == "finetune":
         for param in model.parameters():
             param.requires_grad = True
 
-        optimizer = optim.AdamW(
-            model.parameters(), lr=config.learning_rate/10,
-            weight_decay=config.weight_decay
-        )
-        _ = train(model, train_loader, val_loader, criterion, optimizer,
-                config.epochs, device, save_path, patience=config.patience
-        )
+        optimizer_and_train(model, config, train_loader, val_loader, criterion, device, save_path, config.learning_rate / 10)
 
 def train(model, train_loader, val_loader, criterion, optimizer, epochs, device, save_path, epoch_offset=0, patience=10):
     """

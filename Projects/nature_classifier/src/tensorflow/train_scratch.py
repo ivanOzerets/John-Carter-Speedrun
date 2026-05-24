@@ -1,4 +1,5 @@
 import tensorflow as tf
+from tensorflow.keras.losses import SparseCategoricalCrossentropy
 import os
 import wandb
 from wandb.integration.keras import WandbMetricsLogger, WandbModelCheckpoint
@@ -42,7 +43,11 @@ def sweep_train():
     train_dataset, val_dataset, test_dataset = get_datasets(PROCESSED_DIR, BATCH_SIZE, NORMALIZE_MEAN, NORMALIZE_STD)
     model = SimpleCNN(num_conv_layers=config.num_conv_layers, base_filters=config.base_filters, num_classes=NUM_CLASSES, dropout_rate=config.dropout)
     optimizer = tf.keras.optimizers.AdamW(learning_rate=config.learning_rate, weight_decay=config.weight_decay)
-    model.compile(optimizer=optimizer, loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    model.compile(
+        optimizer=optimizer, 
+        loss=SparseCategoricalCrossentropy(from_logits=True),
+        metrics=['accuracy']
+    )
 
     early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=PATIENCE, restore_best_weights=True)
     wandb_callback = WandbMetricsLogger()

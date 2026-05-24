@@ -5,10 +5,9 @@ def get_datasets(processed_dir, batch_size, mean, std, test_dir=None, combine_tr
     """
     Create datasets for training, validation, and test datasets.
     """
-    mean_t = tf.constant(mean, dtype=tf.float32)
-    std_t = tf.constant(std, dtype=tf.float32)
-
     def normalize(image, label):
+        mean_t = tf.constant(mean, dtype=tf.float32)
+        std_t = tf.constant(std, dtype=tf.float32)
         image = tf.cast(image, tf.float32) / 255.0
         image = (image - mean_t) / std_t
 
