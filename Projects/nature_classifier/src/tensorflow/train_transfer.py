@@ -3,7 +3,7 @@ from tensorflow.keras.losses import SparseCategoricalCrossentropy
 import os
 import wandb
 from wandb.integration.keras import WandbMetricsLogger
-from src.tensorflow.model import get_pretrain_model, unfreeze_model, get_gradual_layers
+from src.tensorflow.model import get_pretrained_model, unfreeze_model, get_gradual_layers
 from src.tensorflow.data import get_datasets
 
 EPOCHS = 100
@@ -15,7 +15,7 @@ NORMALIZE_STD = [0.229, 0.224, 0.225]
 DROPOUT_RATE = 0.5
 LEARNING_RATE = 0.001
 PATIENCE = 10
-WEIGHT_DECAY = 1e-4
+WEIGHT_DECAY = 0.0001
 
 sweep_config = {
     "method": "grid",
@@ -24,9 +24,9 @@ sweep_config = {
         "goal": "maximize"
     },
     "parameters": {
-        "model_name": {"values": ["resnet50"]},
+        "model_name": {"values": ["resnet50v2"]},
         "data_size": {"values": ["full"]},
-        "strategy": {"values": ["gradual"]},
+        "strategy": {"values": ["frozen", "gradual", "finetune"]},
         "learning_rate": {"value": LEARNING_RATE},
         "dropout": {"value": DROPOUT_RATE},
         "batch_size": {"value": BATCH_SIZE},
@@ -48,11 +48,11 @@ def compile_and_fit(model, train_dataset, val_dataset, config, save_path, lr, in
     model.compile(optimizer=optimizer, loss=SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
     history = model.fit(train_dataset, validation_data=val_dataset, epochs=EPOCHS, callbacks=callbacks, initial_epoch=initial_epoch)
 
-    return initial_epoch + len(history.history['loss'])
+    return len(history.history['loss'])
 
-def sweep_train():
+def train_strategy(model, config, train_dataset, val_dataset, save_path):
     '''
-    Main training loop for the sweep. Initializes the model, dataloaders, and starts training according to the strategy.
+    Train the model according to the specified strategy.
 
     Strategies:
     - frozen: train classification head only, backbone frozen
@@ -60,6 +60,28 @@ def sweep_train():
                the first few layers until convergence at each stage, reducing
                the learning rate at each stage.
     - finetune: unfreeze all backbone layers with reduced learning rate
+    '''
+    if config.strategy == "finetune":
+        model.get_layer(config.model_name).trainable = True
+        compile_and_fit(model, train_dataset, val_dataset, config, save_path, config.learning_rate / 10)
+        return
+    
+    # frozen run
+    completed_epochs = compile_and_fit(model, train_dataset, val_dataset, config, save_path, config.learning_rate)
+    
+    if config.strategy == "gradual":
+        layer_groups = get_gradual_layers(config.model_name)
+
+        for i, group in enumerate(layer_groups):
+            unfreeze_model(model, group, backbone_name=config.model_name)
+            lr = config.learning_rate / (10 ** (i + 1))
+
+            epochs_run = compile_and_fit(model, train_dataset, val_dataset, config, save_path, lr, initial_epoch=completed_epochs)
+            completed_epochs += epochs_run
+
+def sweep_train():
+    '''
+    Main training loop for the sweep. Initializes the model, dataloaders, and starts training according to the strategy.
     '''
     wandb.init(project="nature-classifier", entity="ivan.ozerets")
     config = wandb.config
@@ -82,20 +104,9 @@ def sweep_train():
         test_dir=os.path.join("data", "split", "test")
     )
 
-    model = get_pretrain_model(num_classes=NUM_CLASSES, dropout_rate=config.dropout, freeze=True)
+    model = get_pretrained_model(num_classes=NUM_CLASSES, dropout_rate=config.dropout, freeze=True)
 
-    if config.strategy == "frozen":
-        _ = compile_and_fit(model, train_dataset, val_dataset, config, save_path, config.learning_rate)
-    elif config.strategy == "gradual":
-        layer_groups = get_gradual_layers(config.model_name)
-
-        for i, group in enumerate(layer_groups):
-            unfreeze_model(model, group, backbone_name=config.model_name)
-            lr = config.learning_rate / (10 ** i)
-            epochs_completed = compile_and_fit(model, train_dataset, val_dataset, config, save_path, lr, initial_epoch=epochs_completed)
-    elif config.strategy == "finetune":
-        model.get_layer(config.model_name).trainable = True
-        _ = compile_and_fit(model, train_dataset, val_dataset, config, save_path, config.learning_rate/10)
+    train_strategy(model, config, train_dataset, val_dataset, save_path)
 
     test_loss, test_acc = model.evaluate(test_dataset)
     wandb.log({"test/loss": test_loss, "test/acc": test_acc})
