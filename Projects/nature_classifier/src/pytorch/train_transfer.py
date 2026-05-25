@@ -25,9 +25,9 @@ sweep_config = {
         "goal": "maximize"
     },
     "parameters": {
-        "model_name": {"values": ["resnet101"]},
-        "data_size": {"values": ["small","medium","full"]},
-        "strategy": {"values": ["gradual"]},
+        "model_name": {"values": ["resnet50"]},
+        "data_size": {"values": ["full"]},
+        "strategy": {"values": ["frozen", "gradual", "finetune"]},
         "learning_rate": {"value": LEARNING_RATE},
         "dropout": {"value": DROPOUT_RATE},
         "batch_size": {"value": BATCH_SIZE},
@@ -80,4 +80,4 @@ def sweep_train():
 
 if __name__ == "__main__":
     sweep_id = wandb.sweep(sweep_config, project="nature-classifier", entity="ivan.ozerets")
-    wandb.agent(sweep_id, function=sweep_train, count=21)
+    wandb.agent(sweep_id, function=sweep_train, count=3)

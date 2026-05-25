@@ -28,24 +28,26 @@ def train_strategy(model, config, train_loader, val_loader, criterion, device, s
                the learning rate at each stage.
     - finetune: unfreeze all backbone layers with reduced learning rate
     '''
-    if config.strategy == "frozen":
-        optimizer_and_train(model, config, train_loader, val_loader, criterion, device, save_path, config.learning_rate)
-    elif config.strategy == "gradual":
+
+    if config.strategy == "finetune":
+        for param in model.parameters():
+            param.requires_grad = True
+        
+        optimizer_and_train(model, config, train_loader, val_loader, criterion, device, save_path, config.learning_rate/10)
+        return
+
+    # frozen run
+    completed_epochs = optimizer_and_train(model, config, train_loader, val_loader, criterion, device, save_path, config.learning_rate)
+
+    if config.strategy == "gradual":
         layer_groups = get_gradual_layers(config.model_name)
-        completed_epochs = 0
 
         for i, phase_layers in enumerate(layer_groups):
             unfreeze_layers(model, phase_layers)
-            lr = config.learning_rate / (10 ** i)
+            lr = config.learning_rate / (10 ** (i + 1))
             
             epochs_run = optimizer_and_train(model, config, train_loader, val_loader, criterion, device, save_path, lr, epoch_offset=completed_epochs)
-
             completed_epochs += epochs_run
-    elif config.strategy == "finetune":
-        for param in model.parameters():
-            param.requires_grad = True
-
-        optimizer_and_train(model, config, train_loader, val_loader, criterion, device, save_path, config.learning_rate / 10)
 
 def train(model, train_loader, val_loader, criterion, optimizer, epochs, device, save_path, epoch_offset=0, patience=10):
     """

@@ -90,7 +90,7 @@ def get_pretrained_model(model_name, num_classes, dropout_rate=0.5, freeze=True)
 
     return model
 
-def unfreeze_layers(model, layer_names):
+def unfreeze_layers(model, layer_name):
     for name, param in model.named_parameters():
-        if any(layer_name in name for layer_name in layer_names):
+        if layer_name in name:
             param.requires_grad = True
