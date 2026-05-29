@@ -1,5 +1,7 @@
-[Tennis Avatar](https://github.com/ivanOzerets/John-Carter-Speedrun/tree/main/Projects/Tennis-Avatar)
+[Ai Bird Companion](https://github.com/ivanOzerets/John-Carter-Speedrun/tree/main/Projects/ai-bird-companion)
 
-[AI Music Recognition](https://github.com/ivanOzerets/John-Carter-Speedrun/tree/main/Projects/AI-Music-Recognition)
+[ML Architecture Comparison](https://github.com/ivanOzerets/John-Carter-Speedrun/tree/main/Projects/ml-architecture-comparison)
 
-[Paper Recreations](https://github.com/ivanOzerets/John-Carter-Speedrun/tree/main/Projects/Paper-Recreations)
+[portfolio](https://github.com/ivanOzerets/John-Carter-Speedrun/tree/main/Projects/portfolio)
+
+[re-zero](https://github.com/ivanOzerets/John-Carter-Speedrun/tree/main/Projects/portfolio)
