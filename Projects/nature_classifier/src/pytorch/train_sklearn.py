@@ -49,7 +49,7 @@ def extract_features(model, dataloader):
 def run_experiments():
     print("Starting sklearn experiments...")
     wandb.init(project="nature-classifier", entity="ivan.ozerets")
-    wandb.run.name = "sklearn_resnet50"
+    wandb.run.name = "train_sklearn_experiments"
 
     extractor = get_feature_extractor()
 

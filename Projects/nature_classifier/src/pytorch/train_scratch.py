@@ -17,7 +17,8 @@ NORMALIZE_MEAN = [0.5, 0.5, 0.5]
 NORMALIZE_STD = [0.5, 0.5, 0.5]
 
 sweep_config = {
-    "method": "bayes",
+    "name": "train_scratch_sweep",
+    "method": "grid",
     "metric": {
         "name": "val/acc",
         "goal": "maximize"
@@ -27,7 +28,7 @@ sweep_config = {
         "num_conv_layers": {"values": [4, 5, 6]},
         "base_filters": {"values": [32, 64, 128]},
         "dropout": {"values": [0.3, 0.5, 0.7]},
-        "weight_decay": {"values": [0, 1e-4, 1e-3]},
+        "weight_decay": {"values": [0]},
         "epochs": {"value": EPOCHS},
         "batch_size": {"value": BATCH_SIZE},
         "num_classes": {"value": NUM_CLASSES}
@@ -54,4 +55,4 @@ def sweep_train():
 
 if __name__ == "__main__":
     sweep_id = wandb.sweep(sweep_config, project="nature-classifier", entity="ivan.ozerets")
-    wandb.agent(sweep_id, function=sweep_train, count=30)
+    wandb.agent(sweep_id, function=sweep_train, count=81)

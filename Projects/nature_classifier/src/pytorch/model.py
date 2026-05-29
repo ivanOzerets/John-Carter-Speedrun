@@ -7,13 +7,13 @@ def get_gradual_layers(model_name):
     Return the layer groups to unfreeze for gradual unfreezing based on the model architecture.
     '''
     layer_map = {
-        "resnet18": [["layer4"], ["layer3"], ["layer2"]],
-        "resnet50": [["layer4"], ["layer3"], ["layer2"]],
-        "resnet101": [["layer4"], ["layer3"], ["layer2"]],
-        "mobilenet_v3_small": [["features.12"], ["features.10"], ["features.8"]],
-        "mobilenet_v3_large": [["features.16"], ["features.14"], ["features.12"]],
-        "efficientnet_b0": [["features.8"], ["features.7"], ["features.6"]],
-        "efficientnet_b3": [["features.8"], ["features.7"], ["features.6"]]
+        "resnet18": ["layer4", "layer3", "layer2"],
+        "resnet50": ["layer4", "layer3", "layer2"],
+        "resnet101": ["layer4", "layer3", "layer2"],
+        "mobilenet_v3_small": ["features.12", "features.10", "features.8"],
+        "mobilenet_v3_large": ["features.16", "features.14", "features.12"],
+        "efficientnet_b0": ["features.8", "features.7", "features.6"],
+        "efficientnet_b3": ["features.8", "features.7", "features.6"]
     }
 
     if model_name not in layer_map:

@@ -10,3 +10,5 @@ models/
 *.pt
 *.pth
 wandb/
+hf-space/
+frontend/

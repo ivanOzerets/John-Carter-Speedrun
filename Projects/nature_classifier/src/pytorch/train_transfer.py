@@ -19,15 +19,16 @@ PATIENCE = 10
 WEIGHT_DECAY = 1e-4
 
 sweep_config = {
+    "name": "train_transfer_sweep_p2",
     "method": "grid",
     "metric": {
         "name": "val/acc",
         "goal": "maximize"
     },
     "parameters": {
-        "model_name": {"values": ["resnet50"]},
+        "model_name": {"values": ["efficientnet_b3"]},
         "data_size": {"values": ["full"]},
-        "strategy": {"values": ["frozen", "gradual", "finetune"]},
+        "strategy": {"values": ["gradual", "finetune"]},
         "learning_rate": {"value": LEARNING_RATE},
         "dropout": {"value": DROPOUT_RATE},
         "batch_size": {"value": BATCH_SIZE},
@@ -80,4 +81,4 @@ def sweep_train():
 
 if __name__ == "__main__":
     sweep_id = wandb.sweep(sweep_config, project="nature-classifier", entity="ivan.ozerets")
-    wandb.agent(sweep_id, function=sweep_train, count=3)
+    wandb.agent(sweep_id, function=sweep_train, count=18)
