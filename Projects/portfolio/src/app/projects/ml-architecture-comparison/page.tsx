@@ -5,6 +5,7 @@ import WaveGrid from "@/app/components/wave-grid";
 import hljs from "highlight.js/lib/core";
 import python from "highlight.js/lib/languages/python";
 import "highlight.js/styles/atom-one-dark.css";
+import ResultsSection from "@/app/components/results-section";
 
 hljs.registerLanguage("python", python);
 
@@ -219,7 +220,7 @@ export default function NatureClassifier() {
         .number { color: #f78c6c; }
 
       `}</style>
-      
+
       <WaveGrid />
 
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "2rem clamp(1rem, 4vw, 3rem) 4rem" }}>
@@ -258,18 +259,28 @@ export default function NatureClassifier() {
             ML Architecture Comparison
           </h1>
           <p style={{ fontSize: 13, color: "rgba(240,240,240,0.4)", lineHeight: 1.7, maxWidth: 600 }}>
-            PyTorch vs TensorFlow vs Scikit-learn. Scratch CNN to fine-tuning pretrained models on Intel's scene classification dataset — 6 classes, 14,000 images.
+            PyTorch vs TensorFlow vs Scikit-learn experiments. Scratch CNN to fine-tuning pretrained models on Intel's scene classification dataset.
           </p>
         </div>
 
         {/* Top two columns */}
-        <div style={{ display: "grid", gridTemplateColumns: "50% 50%", gap: "1rem", marginBottom: "1rem", alignItems: "stretch" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem", alignItems: "stretch" }}>
 
           {/* Left — Demo */}
           <div className="glass" style={{ padding: "1.75rem" }}>
-            <p style={{ fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(240,240,240,0.25)", marginBottom: "1.25rem" }}>
-              Live demo
-            </p>
+
+            {/* Header row */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <p style={{ fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(240,240,240,0.25)", marginBottom: "1.25rem" }}>
+                Live demo
+              </p>
+              {loading && (
+                <p style={{ fontSize: 10, color: "rgba(240,240,240,0.3)", letterSpacing: "0.08em", textAlign: "center", marginBottom: "1.25rem" }}>running inference...</p>
+              )}
+              {error && (
+                <p style={{ fontSize: 10, color: "rgba(255,100,100,0.7)", letterSpacing: "0.05em" }}>{error}</p>
+              )}
+            </div>
 
             {/* Drop zone */}
             <div
@@ -292,34 +303,24 @@ export default function NatureClassifier() {
               onChange={e => e.target.files?.[0] && handleUpload(e.target.files[0])} />
 
             {/* Results */}
-            {loading && (
-              <p style={{ fontSize: 11, color: "rgba(240,240,240,0.3)", letterSpacing: "0.08em", textAlign: "center" }}>running inference...</p>
-            )}
-            {error && (
-              <p style={{ fontSize: 11, color: "rgba(255,100,100,0.7)", letterSpacing: "0.05em" }}>{error}</p>
-            )}
-            {!loading && (
-              <div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {CLASS_NAMES.map(cls => (
-                    <div key={cls} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <span style={{ fontSize: 10, width: 70, color: prediction?.class === cls ? "#f0f0f0" : "rgba(240,240,240,0.35)", letterSpacing: "0.04em" }}>
-                        {cls}
-                      </span>
-                      <div className="bar-track">
-                        <div className="bar-fill" style={{
-                          width: prediction ? `${(prediction.scores[cls] || 0) * 100}%` : "0%",
-                          opacity: prediction?.class === cls ? 1 : 0.4,
-                        }} />
-                      </div>
-                      <span style={{ fontSize: 10, width: 36, textAlign: "right", color: prediction?.class === cls ? "#00ffc8" : "rgba(240,240,240,0.3)" }}>
-                        {prediction ? `${((prediction.scores[cls] || 0) * 100).toFixed(1)}%` : "—"}
-                      </span>
-                    </div>
-                  ))}
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: "0.5rem" }}>
+              {CLASS_NAMES.map(cls => (
+                <div key={cls} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ fontSize: 10, width: 70, color: prediction?.class === cls ? "#f0f0f0" : "rgba(240,240,240,0.35)", letterSpacing: "0.04em" }}>
+                    {cls}
+                  </span>
+                  <div className="bar-track">
+                    <div className="bar-fill" style={{
+                      width: prediction ? `${(prediction.scores[cls] || 0) * 100}%` : "0%",
+                      opacity: prediction?.class === cls ? 1 : 0.4,
+                    }} />
+                  </div>
+                  <span style={{ fontSize: 10, width: 36, textAlign: "right", color: prediction?.class === cls ? "#00ffc8" : "rgba(240,240,240,0.3)" }}>
+                    {prediction ? `${((prediction.scores[cls] || 0) * 100).toFixed(1)}%` : "—"}
+                  </span>
                 </div>
-              </div>
-            )}
+              ))}
+            </div>
           </div>
 
           {/* Right — Code */}
@@ -330,7 +331,7 @@ export default function NatureClassifier() {
               </p>
               <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
                 <a
-                  href="https://github.com/ivanOzerets/John-Carter-Speedrun/Projects/ml-architecture-comparison"
+                  href="https://github.com/ivanOzerets/John-Carter-Speedrun/tree/main/Projects/ml-architecture-comparison"
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{ fontSize: 10, color: "rgba(240,240,240,0.3)", textDecoration: "none", letterSpacing: "0.08em", transition: "color 0.2s" }}
@@ -369,27 +370,7 @@ export default function NatureClassifier() {
           </div>
         </div>
 
-        {/* Results section */}
-        <div className="glass" style={{ padding: "1.75rem", marginBottom: "1rem" }}>
-          <p style={{ fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(240,240,240,0.25)", marginBottom: "1.5rem" }}>
-            Results
-          </p>
-
-          {/* Placeholder for W&B charts */}
-          <div style={{
-            background: "rgba(255,255,255,0.02)",
-            border: "0.5px dashed rgba(255,255,255,0.08)",
-            borderRadius: 8,
-            height: 300,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}>
-            <p style={{ fontSize: 11, color: "rgba(240,240,240,0.2)", letterSpacing: "0.08em" }}>
-              W&B charts — coming soon
-            </p>
-          </div>
-        </div>
+        <ResultsSection />
 
         {/* Personal notes */}
         <div className="glass" style={{ padding: "1.75rem" }}>

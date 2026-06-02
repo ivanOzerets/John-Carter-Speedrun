@@ -9,8 +9,10 @@ from sklearn.svm import SVC
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier 
+from sklearn.metrics import confusion_matrix
 from xgboost import XGBClassifier
 from src.pytorch.data import get_dataloaders
+from sklearn.decomposition import PCA
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 CLASS_NAMES = ["buildings", "forest", "glacier", "mountain", "sea", "street"]
@@ -69,13 +71,46 @@ def run_experiments():
         "XGBoost": XGBClassifier(n_estimators=100)
     }
 
+    # store test image paths for misclassified lookup later
+    test_dataset = test_loader.dataset
+    test_image_paths = [test_dataset.samples[i][0] for i in range(len(test_dataset))]
+
     for name, clf in classifiers.items():
         print(f"Training {name}...")
         clf.fit(train_features, train_labels)
         test_acc = clf.score(test_features, test_labels)
+        cm = confusion_matrix(test_labels, clf.predict(test_features))
         print(f"{name} Test Accuracy: {test_acc:.4f}")
-        wandb.log({f"{name}/test_acc": test_acc})
+        wandb.log({
+            f"{name}/test_acc": test_acc,
+            f"{name}/confusion_matrix": cm.tolist()
+        })
     
+    # PCA on test features
+    pca = PCA(n_components=2)
+    features_2d = pca.fit_transform(test_features)
+    pca_data = {
+        "x": features_2d[:, 0].tolist(),
+        "y": features_2d[:, 1].tolist(),
+        "labels": test_labels.tolist()
+    }
+    wandb.log({"pca_features": pca_data})
+
+    # SVM misclassified images
+    svm_clf = classifiers["SVM"]
+    y_pred_svm = svm_clf.predict(test_features)
+    misclassified_indices = np.where(y_pred_svm != test_labels)[0]
+    misclassified = [
+        {
+            "true": CLASS_NAMES[test_labels[i]],
+            "predicted": CLASS_NAMES[y_pred_svm[i]],
+            "path": test_image_paths[i],
+            "index": int(i)
+        }
+        for i in misclassified_indices[:20]
+    ]
+    wandb.log({"svm_misclassified": misclassified})
+
     wandb.finish()
 
 if __name__ == "__main__":

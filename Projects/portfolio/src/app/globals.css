@@ -25,14 +25,21 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.code-block::-webkit-scrollbar {
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.1) transparent;
+}
+
+*::-webkit-scrollbar {
   width: 4px;
   height: 4px;
 }
-.code-block::-webkit-scrollbar-track {
+
+*::-webkit-scrollbar-track {
   background: transparent;
 }
-.code-block::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.1);
   border-radius: 2px;
 }
