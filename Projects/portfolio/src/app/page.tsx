@@ -11,6 +11,7 @@ const PROJECTS = [
     description: "A personal AI research assistant. In goes a list of YouTube links on a subjuct. Out pops summaries, highlights, and relavant follow-up.",
     tags: ["Python", "AI", "CLI", "LLM"],
     status: "planned",
+    disabled: true,
   },
   {
     slug: "re-zero-productivity-system",
@@ -18,6 +19,7 @@ const PROJECTS = [
     description: "An implementation of Mark Forster's Resistance Zero system. Using psychology to build momentum and beat procrastination.",
     tags: ["React Native", "TypeScript"],
     status: "in progress",
+    disabled: true,
   },
   {
     slug: "ml-architecture-comparison",
@@ -25,6 +27,7 @@ const PROJECTS = [
     description: "PyTorch vs TensorFlow vs Scikit-learn. Scratch CNN to fine-tuning pretrained models on Intel's scene classification dataset.",
     tags: ["Python", "PyTorch", "TensorFlow", "sklearn", "FastAPI"],
     status: "complete",
+    disabled: false,
   },
 ];
 
@@ -219,16 +222,9 @@ export default function Home() {
             gridTemplateColumns: "repeat(3, 1fr)",
             gap: "1rem",
           }}>
-            {PROJECTS.map((p) => (
-              <Link
-                key={p.slug}
-                href={`/projects/${p.slug}`}
-                className="project-link"
-                onMouseEnter={() => setHovered(p.slug)}
-                onMouseLeave={() => setHovered(null)}
-              >
+            {PROJECTS.map((p) => {
+              const card = (
                 <div className="glass-card" style={{ padding: "1.75rem", height: "100%", position: "relative" }}>
-
                   {/* Status */}
                   <div style={{ display: "flex", alignItems: "center", marginBottom: "1.25rem" }}>
                     <span className={`status-dot ${
@@ -245,7 +241,6 @@ export default function Home() {
                       {p.status}
                     </span>
                   </div>
-
                   {/* Title */}
                   <h2 style={{
                     fontFamily: "'Instrument Serif', serif",
@@ -257,7 +252,6 @@ export default function Home() {
                   }}>
                     {p.title}
                   </h2>
-                  
                   {/* Demo preview */}
                   <div style={{
                     width: "100%",
@@ -280,7 +274,6 @@ export default function Home() {
                       preview
                     </span>
                   </div>
-
                   {/* Description */}
                   <p style={{
                     fontFamily: "'DM Mono', monospace",
@@ -291,7 +284,6 @@ export default function Home() {
                   }}>
                     {p.description}
                   </p>
-
                   {/* Tags */}
                   <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: "0.5rem" }}>
                     {p.tags.map((tag) => (
@@ -299,8 +291,24 @@ export default function Home() {
                     ))}
                   </div>
                 </div>
-              </Link>
-            ))}
+              );
+
+              return p.disabled ? (
+                <div key={p.slug} style={{ cursor: "default", pointerEvents: "none" }}>
+                  {card}
+                </div>
+              ) : (
+                <Link
+                  key={p.slug}
+                  href={`/projects/${p.slug}`}
+                  className="project-link"
+                  onMouseEnter={() => setHovered(p.slug)}
+                  onMouseLeave={() => setHovered(null)}
+                >
+                  {card}
+                </Link>
+              );
+            })}
           </div>
 
         </section>
