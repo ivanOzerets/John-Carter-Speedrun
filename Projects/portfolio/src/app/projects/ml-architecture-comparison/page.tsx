@@ -1,11 +1,12 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import WaveGrid from "@/app/components/wave-grid";
 import hljs from "highlight.js/lib/core";
 import python from "highlight.js/lib/languages/python";
 import "highlight.js/styles/atom-one-dark.css";
 import ResultsSection from "@/app/components/results-section";
+import ReactMarkdown from "react-markdown";
 
 hljs.registerLanguage("python", python);
 
@@ -95,7 +96,7 @@ const TENSORFLOW_CODE = `def compile_and_fit(model, train_dataset, val_dataset,
 
 const CLASS_NAMES = ["buildings", "forest", "glacier", "mountain", "sea", "street"];
 
-export default function NatureClassifier() {
+export default function MlArchitectureComparison() {
   const [framework, setFramework] = useState<"pytorch" | "tensorflow">("pytorch");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [prediction, setPrediction] = useState<{
@@ -135,6 +136,15 @@ export default function NatureClassifier() {
     const file = e.dataTransfer.files[0];
     if (file) handleUpload(file);
   };
+
+  const [notes, setNotes] = useState("");
+  const [notesOpen, setNotesOpen] = useState(false);
+
+  useEffect(() => {
+    fetch("/notes/ml-architecture-comparison.md")
+    .then(r => r.text())
+    .then(setNotes);
+  }, []);
 
   return (
     <main style={{
@@ -218,6 +228,46 @@ export default function NatureClassifier() {
         .comment { color: rgba(240,240,240,0.3); }
         .function { color: #82aaff; }
         .number { color: #f78c6c; }
+
+        .notes-content h1 {
+          font-size: 13px;
+          color: rgba(240,240,240,0.7);
+          margin-bottom: 0.5rem;
+          margin-top: 1.25rem;
+          font-weight: 500;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          font-family: 'DM Mono', monospace;
+        }
+        .notes-content h2 {
+          font-size: 12px;
+          color: rgba(240,240,240,0.5);
+          margin-bottom: 0.4rem;
+          margin-top: 1rem;
+          font-weight: 500;
+          letter-spacing: 0.08em;
+          font-family: 'DM Mono', monospace;
+        }
+        .notes-content h3 {
+          font-size: 11px;
+          color: rgba(240,240,240,0.4);
+          margin-bottom: 0.3rem;
+          margin-top: 0.75rem;
+          font-weight: 400;
+          letter-spacing: 0.06em;
+          font-family: 'DM Mono', monospace;
+        }
+        .notes-content p {
+          margin-bottom: 0.75rem;
+        }
+        .notes-content ul, .notes-content ol {
+          padding-left: 1rem;
+          margin-bottom: 0.75rem;
+          list-style-type: disc;
+        }
+        .notes-content li {
+          margin-bottom: 0.25rem;
+        }
 
       `}</style>
 
@@ -374,12 +424,43 @@ export default function NatureClassifier() {
 
         {/* Personal notes */}
         <div className="glass" style={{ padding: "1.75rem" }}>
-          <p style={{ fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(240,240,240,0.25)", marginBottom: "1rem" }}>
-            Notes
-          </p>
-          <p style={{ fontSize: 12, color: "rgba(240,240,240,0.35)", lineHeight: 1.8, fontStyle: "italic" }}>
-            Personal notes coming soon.
-          </p>
+          <div
+            onClick={() => setNotesOpen(!notesOpen)}
+            style={{ 
+              display: "flex", 
+              justifyContent: "space-between", 
+              alignItems: "center", 
+              cursor: "pointer",
+              userSelect: "none",
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.querySelector('p')!.style.color = "rgba(0,255,200,0.5)";
+              e.currentTarget.querySelector('span')!.style.color = "rgba(0,255,200,0.5)";
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.querySelector('p')!.style.color = "rgba(240,240,240,0.25)";
+              e.currentTarget.querySelector('span')!.style.color = "rgba(240,240,240,0.25)";
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              <p style={{ fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(240,240,240,0.25)" }}>
+                Notes
+              </p>
+              <span style={{ 
+                fontSize: 14, 
+                color: "rgba(240,240,240,0.25)", 
+                lineHeight: 1,
+                marginBottom: "4px",
+              }}>
+                {notesOpen ? "▴" : "▾"}
+              </span>
+            </div>
+          </div>
+          {notesOpen && (
+            <div className="notes-content" style={{ fontSize: 12, color: "rgba(240,240,240,0.35)", lineHeight: 1.8, marginTop: "1rem" }}>
+              <ReactMarkdown>{notes}</ReactMarkdown>
+            </div>
+          )}
         </div>
 
       </div>
