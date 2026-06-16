@@ -1,0 +1,6 @@
+[submodule "Projects/ai-desktop-companion"]
+	path = Projects/ai-desktop-companion
+	url = https://github.com/ivanOzerets/AI-Desktop-Companion.git
+[submodule "Projects/portfolio"]
+	path = Projects/portfolio
+	url = https://github.com/ivanOzerets/Portfolio.git
