@@ -4,3 +4,6 @@
 [submodule "Projects/portfolio"]
 	path = Projects/portfolio
 	url = https://github.com/ivanOzerets/Portfolio.git
+[submodule "Projects/re-zero"]
+	path = Projects/re-zero
+	url = https://github.com/ivanOzerets/Re-Zero.git
