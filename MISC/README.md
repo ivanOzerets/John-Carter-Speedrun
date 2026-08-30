@@ -1,4 +1,7 @@
-#TODO
-- Ferris Sweep
-- Linux
-- Synography
+# MISC
+
+## Ferris Sweep
+
+## Linux
+
+## Stynography
