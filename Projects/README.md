@@ -1,7 +1,14 @@
-[Ai Bird Companion](https://github.com/ivanOzerets/John-Carter-Speedrun/tree/main/Projects/ai-bird-companion)
+**[AI Desktop Companion](./ai-desktop-companion)**
+Desktop bird companion driven by a local LLM.
 
-[ML Architecture Comparison](https://github.com/ivanOzerets/John-Carter-Speedrun/tree/main/Projects/ml-architecture-comparison)
+**[gbte-rag-assistant](./gbte-rag-assistant)**
+RAG search over a tennis nonprofit's course and podcast library, with citations.
 
-[Portfolio](https://github.com/ivanOzerets/John-Carter-Speedrun/tree/main/Projects/portfolio)
+**[ML Architecture Comparison](./ml-architecture-comparison)**
+PyTorch vs TensorFlow vs Scikit-learn experiments on Intel's scene classification dataset.
 
-[Re-Zero](https://github.com/ivanOzerets/John-Carter-Speedrun/tree/main/Projects/re-zero)
+**[Portfolio](./portfolio)**
+Personal site, hosts live demos for these projects.
+
+**[Re-Zero](./re-zero)**
+Neovim plugin implementing Mark Forster's Resistance Zero productivity system.
