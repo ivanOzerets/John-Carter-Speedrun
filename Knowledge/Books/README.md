@@ -1,14 +1,16 @@
+# About
 My notes on books will go as follows.
 
 Standard notetaking as I read through the book.
 Followed by summaries in my own words after every subschapter and chapter.
 
-List of books I have read.
+## List of books I have read.
 
-List of books I am reading.
+## List of books I am reading.
 - Mathematics for Machine Learning
+- Agentic Design Patterns
 
-List of books I will read.
+## List of books I will read.
 - Probabilistic Machine Learning: Advanced Topics
 - Practical MLOps: Operationalizing Machine Learning Models
 - Machine Learning: A Probabilistic Perspective
