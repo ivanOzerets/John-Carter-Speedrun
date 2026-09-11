@@ -1,3 +1,7 @@
 CLAUDE.md
 cookies.txt
 data/
+lambda-package/
+*.zip
+__pycache__/
+*.pyc

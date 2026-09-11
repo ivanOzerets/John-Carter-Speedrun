@@ -1,0 +1,73 @@
+#gbte-search-container {
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+#gbte-question {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 24px 0 0 24px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+#gbte-search-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 0 24px 24px 0;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #4881c3;
+}
+
+#gbte-search-row {
+    display: flex;
+    width: 100%;
+}
+
+#gbte-search-btn:hover {
+    background-color: #3a6ea3;
+}
+
+#gbte-results {
+    margin-top: 20px;
+    padding: 16px;
+    border-radius: 8px;
+    background-color: #f7f7f7;
+    line-height: 1.6;
+}
+
+.gbte-answer-text {
+    font-size: 16px;
+}
+
+.gbte-citations {
+    font-size: 14px;
+    margin: 0;
+    padding-bottom: 0 !important;
+}
+
+.gbte-citations li {
+    margin-bottom: 6px;
+}
+
+.gbte-citations li:last-child {
+    margin-bottom: 0;
+}
+
+.gbte-sources-title {
+    margin-top: 24px;
+}
+
+#gbte-question,
+#gbte-search-btn {
+    font-family: inherit;
+}
+
+.gbte-disclaimer {
+    font-size: 14px;
+    color: #777;
+    margin-top: 8px;
+}
